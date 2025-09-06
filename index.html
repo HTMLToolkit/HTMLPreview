@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTMLPreview/title>
+  <style>
+    :root {
+      --themegradient: linear-gradient(135deg, #00bfff, #1e3a8a);
+      --text-color: #ffffff;
+      --textarea-bg: #0f172a;
+      --textarea-color: #ffffff;
+      --button-bg: #00bfff;
+      --button-color: #1e3a8a;
+      --border-radius-inner: 24px;
+      --border-radius-outer: 0px;
+      --shadow-light: 6px 6px 12px rgba(255, 255, 255, 0.2);
+      --shadow-dark: -6px -6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--themegradient);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: right;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .curvomorphic {
+      background: var(--textarea-bg);
+      color: var(--textarea-color);
+      border-radius: var(--border-radius-inner);
+      box-shadow: var(--shadow-light), var(--shadow-dark);
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    textarea.curvomorphic {
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      font-family: monospace;
+      font-size: 1rem;
+      border: none;
+      resize: vertical;
+    }
+
+    button.curvomorphic {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      background: var(--button-bg);
+      color: var(--button-color);
+      border: none;
+      cursor: pointer;
+      align-items: left;
+      box-shadow: var(--shadow-light), var(--shadow-dark);
+      border-radius: var(--border-radius-inner);
+    }
+
+    button.curvomorphic:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    button.curvomorphic:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <h1>HTMLPreview</h1>
+  <textarea id="htmlInput" class="curvomorphic" placeholder="Enter your HTML here"></textarea>
+  <button id="openBtn" class="curvomorphic">Open in New Tab</button>
+
+  <script>
+    function applyCurvomorphism(element) {
+      const rect = element.getBoundingClientRect();
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      const elCenterX = rect.left + rect.width / 2;
+      const elCenterY = rect.top + rect.height / 2;
+
+      const r = '24px', s = '0px';
+      const leftIn = elCenterX > centerX;
+      const rightIn = elCenterX < centerX;
+      const topIn = elCenterY > centerY;
+      const bottomIn = elCenterY < centerY;
+
+      element.style.borderTopLeftRadius = (topIn && leftIn) ? r : s;
+      element.style.borderTopRightRadius = (topIn && rightIn) ? r : s;
+      element.style.borderBottomLeftRadius = (bottomIn && leftIn) ? r : s;
+      element.style.borderBottomRightRadius = (bottomIn && rightIn) ? r : s;
+    }
+
+    const elements = document.querySelectorAll('.curvomorphic');
+    function updateCurvo() {
+      elements.forEach(el => applyCurvomorphism(el));
+    }
+    window.addEventListener('resize', updateCurvo);
+    window.addEventListener('load', updateCurvo);
+
+    document.getElementById('openBtn').addEventListener('click', () => {
+      const htmlContent = document.getElementById('htmlInput').value;
+      const newTab = window.open('', '_blank');
+      if (newTab) {
+        newTab.document.open();
+        newTab.document.write(htmlContent);
+        newTab.document.close();
+      } else {
+        alert('Popup blocked! Please allow popups for this site.');
+      }
+    });
+  </script>
+</body>
+</html>
